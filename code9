@@ -1,0 +1,28 @@
+import heapq
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    pq = [(0, start)]
+    while pq:
+        current_distance, current_node = heapq.heappop(pq)
+        if current_distance > distances[current_node]:
+            continue
+        for neighbor, weight in graph[current_node]:
+            distance = current_distance + weight
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                heapq.heappush(pq, (distance, neighbor))
+    return distances
+graph = {
+    'Shop': [('A', 10), ('B', 3)],
+    'A': [('Shop', 10), ('B', 1), ('C', 2)],
+    'B': [('Shop', 3), ('A', 1), ('C', 8), ('D', 2)],
+    'C': [('A', 2), ('B', 8), ('D', 7), ('E', 5)],
+    'D': [('B', 2), ('C', 7), ('E', 1)],
+    'E': [('C', 5), ('D', 1)]
+}
+start_location = 'Shop'
+shortest_times = dijkstra(graph, start_location)
+print("===== Minimum Time to Deliver Pizzas from Shop =====")
+for location, time in shortest_times.items():
+    print(f"To reach {location}: {time} minutes")
