@@ -1,0 +1,49 @@
+class HashTable:
+    def _init_(self, size=10):
+        self.size = size
+        self.table = [[] for _ in range(size)]
+    def hash_function(self, key):
+        return key % self.size
+    def insert(self, key, value):
+        index = self.hash_function(key)
+        for pair in self.table[index]:
+            if pair[0] == key:
+                pair[1] = value
+                print(f"Updated key {key} with new value '{value}'")
+                return
+        self.table[index].append([key, value])
+        print(f"Inserted: ({key}, '{value}') at index {index}")
+    def search(self, key):
+        index = self.hash_function(key)
+        for pair in self.table[index]:
+            if pair[0] == key:
+                print(f"Found: Key {key} → Value '{pair[1]}'")
+                return pair[1]
+        print(f"Key {key} not found.")
+        return None
+    def delete(self, key):
+        index = self.hash_function(key)
+        for pair in self.table[index]:
+            if pair[0] == key:
+                self.table[index].remove(pair)
+                print(f"Deleted key {key} from index {index}")
+                return
+        print(f"Key {key} not found for deletion.")
+    def display(self):
+        print("\nHash Table State:")
+        for i in range(self.size):
+            print(f"Index {i}: {self.table[i]}")
+        print()
+hash_table = HashTable()
+hash_table.insert(10, "Alice")
+hash_table.insert(25, "Bob")
+hash_table.insert(15, "Charlie")
+hash_table.insert(30, "David")
+hash_table.insert(7, "Eva")
+hash_table.display()
+hash_table.search(25)
+hash_table.search(99)
+hash_table.delete(15)
+hash_table.display()
+hash_table.insert(35, "Frank")
+hash_table.display()
