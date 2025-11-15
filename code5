@@ -1,0 +1,97 @@
+class Node:
+    def _init_(self, roll_no, name, marks):
+        self.roll_no = roll_no
+        self.name = name
+        self.marks = marks
+        self.next = None
+        self.prev = None
+class StudentList:
+    def _init_(self):
+        self.head = None
+    def add_student(self, roll_no, name, marks):
+        new_node = Node(roll_no, name, marks)
+        if not self.head:
+            self.head = new_node
+            print(f"Added: {name} (Roll No: {roll_no}, Marks: {marks})")
+            return
+        temp = self.head
+        while temp.next:
+            temp = temp.next
+        temp.next = new_node
+        new_node.prev = temp
+        print(f"Added: {name} (Roll No: {roll_no}, Marks: {marks})")
+    def delete_student(self, roll_no):
+        temp = self.head
+        while temp:
+            if temp.roll_no == roll_no:
+                if temp.prev:
+                    temp.prev.next = temp.next
+                else:
+                    self.head = temp.next
+                if temp.next:
+                    temp.next.prev = temp.prev
+                print(f"Deleted record of Roll No: {roll_no}")
+                return
+            temp = temp.next
+        print(f"Record with Roll No {roll_no} not found.")
+    def update_student(self, roll_no, new_name=None, new_marks=None):
+        temp = self.head
+        while temp:
+            if temp.roll_no == roll_no:
+                if new_name:
+                    temp.name = new_name
+                if new_marks is not None:
+                    temp.marks = new_marks
+                print(f"Updated Roll No: {roll_no} → Name: {temp.name}, Marks: {temp.marks}")
+                return
+            temp = temp.next
+        print(f"Record with Roll No {roll_no} not found.")
+    def search_student(self, roll_no):
+        temp = self.head
+        while temp:
+            if temp.roll_no == roll_no:
+                print(f"Found: Roll No: {temp.roll_no}, Name: {temp.name}, Marks: {temp.marks}")
+                return
+            temp = temp.next
+        print(f"Record with Roll No {roll_no} not found.")
+    def sort_records(self, key="marks", ascending=True):
+        if not self.head:
+            print("No records to sort.")
+            return
+        swapped = True
+        while swapped:
+            swapped = False
+            temp = self.head
+            while temp.next:
+                first = temp.marks if key == "marks" else temp.roll_no
+                second = temp.next.marks if key == "marks" else temp.next.roll_no
+                if (ascending and first > second) or (not ascending and first < second):
+                    temp.roll_no, temp.next.roll_no = temp.next.roll_no, temp.roll_no
+                    temp.name, temp.next.name = temp.next.name, temp.name
+                    temp.marks, temp.next.marks = temp.next.marks, temp.marks
+                    swapped = True
+                temp = temp.next
+        order = "ascending" if ascending else "descending"
+        print(f"Records sorted by {key} in {order} order.")
+    def display_records(self):
+        if not self.head:
+            print("No records available.")
+            return
+        print("\nStudent Records:")
+        temp = self.head
+        while temp:
+            print(f"Roll No: {temp.roll_no} | Name: {temp.name} | Marks: {temp.marks}")
+            temp = temp.next
+        print()
+students = StudentList()
+students.add_student(101, "Amit", 85)
+students.add_student(102, "Sneha", 90)
+students.add_student(103, "Ravi", 78)
+students.add_student(104, "Priya", 92)
+students.display_records()
+students.update_student(103, new_marks=82)
+students.search_student(102)
+students.sort_records(key="marks", ascending=False)
+students.display_records()
+students.delete_student(101)
+students.display_records()
